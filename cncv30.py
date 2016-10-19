@@ -6,52 +6,11 @@
 import pigpio
 import time
 
-
-#include <Servo.h>
-#include <LiquidCrystal.h>
-#include <avr/pgmspace.h>
-
-Servo servoX;
-Servo servoY;
-Servo servoZ;
-
-#define SENSOR_X   A0
-#define SERVO_X    A1
-#define SWITCH_X   A2
-
-#define SENSOR_Y   12
-#define SERVO_Y    11
-#define SWITCH_Y   13
-
-#define SENSOR_Z    9
-#define SERVO_Z     8
-#define SWITCH_Z   10
-
-#define LCD_RS      2
-#define LCD_EN      3
-#define LCD_D4      4
-#define LCD_D5      5
-#define LCD_D6      6
-#define LCD_D7      7
-
-#define MENU_ENTER A3
-#define MENU_PLUS  A4
-#define MENU_MINUS A5
-
-#define PEN_HUB    10
-#define MAX_MENUE   5
-
-unsigned int X;
-unsigned int Y;
-char isPenUp;
-char menueLevel = 0;
-char menueSubLevel = 0;
-char selectedChar = 0;
-
-//A
-const unsigned char PROGMEM coords_A_01[]={0,56,21,1,29,1,51,56,43,56,37,40,14,40,8,56,0,56};
-const unsigned char PROGMEM coords_A_02[]={16,33,34,33,28,18,26,11,25,9,25,7,24,9,23,12,22,14,22,17,16,33};
-
+font = {}
+#A
+font["A"]=( ((0,56),(21,1), (29,1), (51,56), (43,56), (37,40) , (14,40), (8,56), (0,56)),
+            ((16,33), (34,33), (28,18), (26,11), (25,9), (25,7), (24,9), (23,12), (22,14), (22,17), (16,33)) )
+'''
 //B
 const unsigned char PROGMEM coords_B_01[]={0,55,0,0,21,0,22,0,24,0,25,0,27,1,28,1,29,1,30,1,31,2,31,3,33,3,33,3,34,4,35,4,36,6,36,6,37,7,37,8,37,9,38,10,38,10,39,12,39,12,39,13,39,14,39,15,39,16,39,17,39,18,38,18,38,19,37,20,37,21,36,22,36,22,35,23,34,24,34,24,33,25,32,25,31,26,33,26,34,27,34,27,36,28,36,28,37,29,38,30,39,31,39,31,40,33,40,34,41,34,41,36,42,37,42,38,42,39,42,40,42,41,41,42,41,43,41,43,40,45,40,45,40,46,39,47,39,48,39,48,38,49,37,50,37,51,36,51,36,51,35,52,34,52,34,52,33,53,33,53,31,54,31,54,30,54,29,54,28,54,27,55,26,55,24,55,21,55,0,55};
 const unsigned char PROGMEM coords_B_02[]={7,23,19,23,21,23,24,22,24,22,25,22,25,22,26,22,27,22,27,22,28,21,28,21,29,21,30,20,30,20,30,19,31,19,31,18,31,18,31,17,31,16,31,16,31,15,31,15,31,14,31,13,31,13,31,12,31,12,31,11,31,10,30,10,30,9,30,9,29,9,29,8,28,8,28,7,27,7,27,7,26,7,25,7,24,6,24,6,21,6,18,6,7,6,7,23};
@@ -169,31 +128,47 @@ const unsigned char PROGMEM coords_9_02[]={29,18,29,17,29,15,28,14,28,13,28,12,2
 //0
 const unsigned char PROGMEM coords_0_01[]={0,28,0,23,0,21,0,19,0,17,1,15,1,13,1,12,2,10,3,9,3,8,4,7,5,6,6,4,7,4,7,3,9,2,10,1,11,1,12,0,13,0,15,0,16,0,18,0,19,0,19,0,21,0,22,0,22,0,24,1,24,1,25,1,26,2,27,3,27,3,28,4,29,4,30,5,30,6,31,6,31,7,31,8,32,9,33,10,33,11,33,12,34,13,34,15,34,16,34,17,35,19,35,20,35,24,35,28,35,32,35,34,35,36,34,38,34,40,34,42,33,43,33,45,32,46,31,47,31,48,30,49,29,51,28,51,27,52,27,53,25,54,24,54,23,55,22,55,20,55,19,55,18,55,15,55,15,55,13,55,13,55,12,55,11,54,10,54,10,54,9,53,8,53,7,52,7,52,6,51,6,51,5,50,4,49,4,48,3,47,3,46,2,43,1,41,0,38,0,34,0,31,0,28};
 const unsigned char PROGMEM coords_0_02[]={6,28,6,31,6,34,7,37,7,39,7,41,8,43,8,44,9,45,9,45,9,46,10,47,10,48,11,48,12,48,12,49,12,49,13,49,13,49,14,50,15,50,15,50,15,50,16,50,16,51,17,51,18,51,18,50,19,50,19,50,20,50,21,50,21,49,21,49,22,49,22,49,23,48,23,48,24,48,24,47,25,46,25,45,25,45,26,44,26,43,27,41,27,39,28,37,28,34,28,31,28,28,28,25,28,22,28,19,27,17,27,15,26,13,26,12,25,11,25,10,25,10,24,9,24,9,23,8,23,7,22,7,22,7,21,7,21,6,21,6,20,6,19,6,19,6,18,6,18,6,17,6,16,6,16,6,15,6,15,6,15,6,14,6,13,6,13,7,12,7,12,7,12,7,11,8,11,8,10,9,10,9,10,10,9,10,9,11,9,12,8,13,7,15,7,16,7,19,6,22,6,25,6,28};
+'''
 
+class CNC:
+  
+    def __init__(self, pi, SENSOR_X, SERVO_X, SWITCH_X,
+                 SENSOR_Y, SERVO_Y, SWITCH_Y, SENSOR_Z,
+                 SERVO_Z, SWITCH_Z):
+      
+        self.X = 0
+        self.Y = 0
+        self.isPenUp = True
+        
+        self.PEN_HUB = 10
+        
+        # Servo pulse widths to move continuous-rotation servos
+        self.CENTRE = 1500  # off
+        self.INWARD = 2000  # clockwise
+        self.OUTWARD = 1000 # anticlockwise
+        
+        
+    # Move servos one step by turning them on for a short
+    # time and checking for a pulse on the rotation switch.
 
+    def makeStepX(direction):
 
+  #char stringX[4];
+  #char stringY[4];
 
+  #unsigned long timeNow;
+  #unsigned long timeY;
 
+  #servoX.attach(SERVO_X);
+        self.pi.set_servo_pulsewidth(self.SERVO_X, self.CENTRE)
 
-LiquidCrystal lcd(LCD_RS, LCD_EN, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
+  if direction:
+        self.pi.set_servo_pulsewidth(self.SERVO_X, self.INWARD)
+  else:
+        self.pi.set_servo_pulsewidth(self.SERVO_X, self.OUTWARD)
 
-void makeStepX(int direction){
-  char stringX[4];
-  char stringY[4];
-
-  unsigned long timeNow;
-  unsigned long timeX;
-
-  servoX.attach(SERVO_X);
-
-  if(direction==0){
-    servoX.write(0);
-  }
-  else{
-    servoX.write(180);
-  }
-
-  while(digitalRead(SENSOR_X)==1);
+  while self.pi.read(self.SENSOR_X):
+      pass
 
   timeX = millis();
   timeNow = millis();
@@ -210,19 +185,21 @@ void makeStepX(int direction){
     }
   }
 
-  servoX.detach();
+  #servoX.detach();
+        self.pi.set_servo_pulsewidth(self.SERVO_X, 0)
+    
+        if direction:
+            self.X++
+        else:
+            self.X--
+ 
 
-  if(direction == 0){
-    X++;
-  }
-  else{
-    X--;
-  }
+#  sprintf(stringX, "% 3d", X);
+#  sprintf(stringY, "% 3d", Y);
+#  lcd.setCursor(0, 1);lcd.print("   X=");lcd.print(stringX);lcd.print(", Y=");lcd.print(stringY);lcd.print("    ");
 
-  sprintf(stringX, "% 3d", X);
-  sprintf(stringY, "% 3d", Y);
-  lcd.setCursor(0, 1);lcd.print("   X=");lcd.print(stringX);lcd.print(", Y=");lcd.print(stringY);lcd.print("    ");
-}
+
+
 
 void makeStepY(int direction){
   char stringX[4];
