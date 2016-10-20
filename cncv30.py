@@ -32,7 +32,9 @@ font["C"]=( ((41,37), (49,38), (48,40), (47,43), (46,44), (45,46), (44,48),
              (40,16), (39,15), (39,14), (38,13), (37,11), (37,10), (36,10),
              (35,9), (34,8), (33,8), (32,7), (31,7), (30,7), (28,7), (27,6),
              (26,6), (24,6), (23,7), (21,7), (20,7), (19,7), (18,8), (17,8),
-             (15,9,14,10,14,11,12,12,12,13,11,14,11,15,10,16,9,17,9,19,9,20,9,21,8,23,8,24,8,25,8,26,8,28,8,29,8,31,8,33,8,34,9,36,9,37,9,38,10,40,11,41,11,43,12,44,12,44,14,46,14,46,15,47,16,48,17,49,18,49,20,49,21,50,22,50,23,50,24,50,26,50,27,50,28,50,30,50,31,50,32,49,33,49,34,47,36,47,37,46,37,45,39,44,39,43,40,41,40,40,41,38,41,37)) )
+             (15,9), (14,10), (14,11), (12,12), (12,13), (11,14), (11,15),
+             (10,16), (9,17), (9,19), (9,20), (9,21), (8,23), (8,24), (8,25),
+             8,26,8,28,8,29,8,31,8,33,8,34,9,36,9,37,9,38,10,40,11,41,11,43,12,44,12,44,14,46,14,46,15,47,16,48,17,49,18,49,20,49,21,50,22,50,23,50,24,50,26,50,27,50,28,50,30,50,31,50,32,49,33,49,34,47,36,47,37,46,37,45,39,44,39,43,40,41,40,40,41,38,41,37)) )
 ''' 
 //D
 const unsigned char PROGMEM coords_D_01[]={0,55,0,0,19,0,22,0,25,0,27,1,28,1,29,1,30,1,31,1,32,2,33,3,34,3,35,4,36,4,37,5,38,6,39,7,40,8,40,9,42,10,42,12,43,13,43,14,44,16,44,17,45,19,45,21,45,22,45,24,45,25,45,27,45,30,45,32,45,33,45,34,45,36,44,37,44,39,43,39,43,40,43,42,42,43,42,43,41,45,41,45,40,46,40,47,39,48,39,48,38,49,37,49,37,50,36,51,35,51,34,52,34,52,33,52,32,53,31,53,31,54,30,54,29,54,28,54,27,54,25,55,25,55,22,55,20,55,0,55};
@@ -146,49 +148,57 @@ const unsigned char PROGMEM coords_0_02[]={6,28,6,31,6,34,7,37,7,39,7,41,8,43,8,
 '''
 
 class CNC:
-  
-    def __init__(self, pi, SENSOR_X, SERVO_X, SWITCH_X,
-                 SENSOR_Y, SERVO_Y, SWITCH_Y, SENSOR_Z,
-                 SERVO_Z, SWITCH_Z):
+    
+    def __init__(self, pi, SENSOR_X, SWITCH_X, SERVO_X, 
+                 SENSOR_Y, SWITCH_Y, SERVO_Y,
+                 SENSOR_Z, SWITCH_Z, SERVO_Z):
 
         # Link to the PiGPIO daemon
         self.pi = pi
                         
-        # GPIO pins for rotation sensor, servo PWM and limit switch
+        # GPIO pins for rotation sensor, limit switch and servo PWM
         self.SENSOR_X = SENSOR_X
-        self.SERVO_X = SERVO_X
         self.SWITCH_X = SWITCH_X
-
+        self.SERVO_X = SERVO_X
+            
         self.SENSOR_Y = SENSOR_Y
-        self.SERVO_Y = SERVO_Y
         self.SWITCH_Y = SWITCH_Y
+        self.SERVO_Y = SERVO_Y
 
         self.SENSOR_Z = SENSOR_Z
-        self.SERVO_Z = SERVO_Z
         self.SWITCH_Z = SWITCH_Z
+        self.SERVO_Z = SERVO_Z
 
+        # Set up GPIO pins.  Turn on pullups for switch inputs.
         self.pi.set_mode(self.SENSOR_X, pigpio.INPUT)
-        self.pi.set_mode(self.SERVO_X, pigpio.OUTPUT)
+        self.pi.set_pull_up_down(self.SENSOR_X, pigpio.PUD_UP)
         self.pi.set_mode(self.SWITCH_X, pigpio.INPUT)
+        self.pi.set_pull_up_down(self.SWITCH_X, pigpio.PUD_UP)
+        self.pi.set_mode(self.SERVO_X, pigpio.OUTPUT)
 
         self.pi.set_mode(self.SENSOR_Y, pigpio.INPUT)
-        self.pi.set_mode(self.SERVO_Y, pigpio.OUTPUT)
+        self.pi.set_pull_up_down(self.SENSOR_Y, pigpio.PUD_UP)
         self.pi.set_mode(self.SWITCH_Y, pigpio.INPUT)
+        self.pi.set_pull_up_down(self.SENSOR_Y, pigpio.PUD_UP)
+        self.pi.set_mode(self.SERVO_Y, pigpio.OUTPUT)
 
         self.pi.set_mode(self.SENSOR_Z, pigpio.INPUT)
-        self.pi.set_mode(self.SERVO_Z, pigpio.OUTPUT)
+        self.pi.set_pull_up_down(self.SENSOR_Z, pigpio.PUD_UP)
         self.pi.set_mode(self.SWITCH_Z, pigpio.INPUT)
+        self.pi.set_pull_up_down(self.SENSOR_Z, pigpio.PUD_UP)
+        self.pi.set_mode(self.SERVO_Z, pigpio.OUTPUT)
 
         self.X = 0
         self.Y = 0
         self.isPenUp = True
         
+        # Number of steps to move the pen up or down.
         self.PEN_HUB = 10
         
         # Servo pulse widths to move continuous-rotation servos
         self.CENTRE = 1500  # off
-        self.INWARD = 2000  # clockwise
-        self.OUTWARD = 1000 # anticlockwise
+        self.INWARD = 2000  # clockwise, draw the carriage closer
+        self.OUTWARD = 1000 # anticlockwise, push the carriage away
         
         
     # Move servos one step by turning them on for a short
@@ -196,13 +206,13 @@ class CNC:
 
     def makeStepX(direction):
 
-  #char stringX[4];
-  #char stringY[4];
+    #char stringX[4];
+    #char stringY[4];
 
-  #unsigned long timeNow;
-  #unsigned long timeY;
+    #unsigned long timeNow;
+    #unsigned long timeY;
 
-  #servoX.attach(SERVO_X);
+    #servoX.attach(SERVO_X);
         self.pi.set_servo_pulsewidth(self.SERVO_X, self.CENTRE)
 
         if direction==0:
@@ -219,7 +229,7 @@ class CNC:
         if (timeX > timeNow):
             timeX = timeNow
 
-        while(timeNow - timeX < 0.2){
+        while(timeNow - timeX < 0.2):
             if not(self.pi.read(self.SENSOR_X)):
                 timeX = time.time()
 
@@ -227,129 +237,117 @@ class CNC:
             if (timeX > timeNow):
                 timeX = timeNow
 
-  #servoX.detach();
+    #servoX.detach();
         self.pi.set_servo_pulsewidth(self.SERVO_X, 0)
     
         if direction==0:
             self.X++
         else:
             self.X--
- 
+    
+        print("X = %3d, Y = %3d"%(self.X,self.Y) 
+    
+    #  sprintf(stringX, "% 3d", X);
+    #  sprintf(stringY, "% 3d", Y);
+    #  lcd.setCursor(0, 1);lcd.print("   X=");lcd.print(stringX);lcd.print(", Y=");lcd.print(stringY);lcd.print("    ");
 
-#  sprintf(stringX, "% 3d", X);
-#  sprintf(stringY, "% 3d", Y);
-#  lcd.setCursor(0, 1);lcd.print("   X=");lcd.print(stringX);lcd.print(", Y=");lcd.print(stringY);lcd.print("    ");
+    
+    def makeStepY(direction):
 
+        self.pi.set_servo_pulsewidth(self.SERVO_Y, self.CENTRE)
 
+        if direction==0:
+            self.pi.set_servo_pulsewidth(self.SERVO_Y, self.OUTWARD)
+        else:
+            self.pi.set_servo_pulsewidth(self.SERVO_Y, self.INWARD)
 
+        while self.pi.read(self.SENSOR_Y):
+            pass
 
-void makeStepY(int direction){
-  char stringX[4];
-  char stringY[4];
+        timeY = time.time()
+        timeNow = time.time()
 
-  unsigned long timeNow;
-  unsigned long timeY;
+        if (timeY > timeNow):
+            timeY = timeNow
 
-  servoY.attach(SERVO_Y);
+        while(timeNow - timeY < 0.2):
+            if not(self.pi.read(self.SENSOR_Y)):
+                timeY = time.time()
 
-  if(direction==0){
-    servoY.write(0);
-  }
-  else{
-    servoY.write(180);
-  }
+            timeNow = time.time()
+            if (timeY > timeNow):
+                timeY = timeNow
 
-  while(digitalRead(SENSOR_Y)==1);
+        self.pi.set_servo_pulsewidth(self.SERVO_Y, 0)
+    
+        if direction==0:
+            self.Y++
+        else:
+            self.Y--
 
-  timeY = millis();
-  timeNow = millis();
-  if(timeY > timeNow){
-    timeY = timeNow;
-  }
-  while(timeNow - timeY < 200){
-    if(digitalRead(SENSOR_Y)==0){
-      timeY = millis();
-    }
-    timeNow = millis();
-    if(timeY > timeNow){
-      timeY = timeNow;
-    }
-  }
+        print("X = %3d, Y = %3d"%(self.X,self.Y) 
 
-  servoY.detach();
+            
+    def makeStepZ(direction):
 
-  if(direction == 0){
-    Y++;
-  }
-  else{
-    Y--;
-  }
+        self.pi.set_servo_pulsewidth(self.SERVO_Z, self.CENTRE)
 
-  sprintf(stringX, "% 3d", X);
-  sprintf(stringY, "% 3d", Y);
-  lcd.setCursor(0, 1);lcd.print("   X=");lcd.print(stringX);lcd.print(", Y=");lcd.print(stringY);lcd.print("    ");
-}
+        if direction==0:
+            self.pi.set_servo_pulsewidth(self.SERVO_Z, self.OUTWARD)
+        else:
+            self.pi.set_servo_pulsewidth(self.SERVO_Z, self.INWARD)
 
-void makeStepZ(int direction){
-  unsigned long timeNow;
-  unsigned long timeZ;
+        while self.pi.read(self.SENSOR_Z):
+            pass
 
-  servoZ.attach(SERVO_Z);
+        timeZ = time.time()
+        timeNow = time.time()
 
-  if(direction==0){
-    servoZ.write(0);
-  }
-  else{
-    servoZ.write(180);
-  }
+        if (timeZ > timeNow):
+            timeZ = timeNow
 
-  while(digitalRead(SENSOR_Z)==1);
+        while(timeNow - timeZ < 0.2):
+            if not(self.pi.read(self.SENSOR_Z)):
+                timeZ = time.time()
 
-  timeZ = millis();
-  timeNow = millis();
-  if(timeZ > timeNow){
-    timeZ = timeNow;
-  }
-  while(timeNow - timeZ < 200){
-    if(digitalRead(SENSOR_Z)==0){
-      timeZ = millis();
-    }
-    timeNow = millis();
-    if(timeZ > timeNow){
-      timeZ = timeNow;
-    }
-  }
+            timeNow = time.time()
+            if (timeZ > timeNow):
+                timeZ = timeNow
 
-  servoZ.detach();
+        self.pi.set_servo_pulsewidth(self.SERVO_Z, 0)
 
-}
 
     def initX(self):
     # Move X servo to home position by driving clockwise until the limit switch is actuated.
-#  servoX.attach(SERVO_X);
-#  servoX.write(180);
+    #  servoX.attach(SERVO_X);
+    #  servoX.write(180);
         self.pi.set_servo_pulsewidth(self.SERVO_X, self.INWARD)
-#   while(digitalRead(SWITCH_X) == 1);
-        while self.pi.read(self.SENSOR_X):
+    #   while(digitalRead(SWITCH_X) == 1);
+        while self.pi.read(self.SWITCH_X):
             pass
-#  servoX.detach();
+    #  servoX.detach();
         self.pi.set_servo_pulsewidth(self.SERVO_X, 0)
+        
+        self.X = 0
 
             
     def initY(self):
     # Move Y servo to home position by driving clockwise until the limit switch is actuated.
         self.pi.set_servo_pulsewidth(self.SERVO_Y, self.INWARD)
-        while self.pi.read(self.SENSOR_Y):
+        while self.pi.read(self.SWITCH_Y):
             pass
         self.pi.set_servo_pulsewidth(self.SERVO_Y, 0)
+        
+        self.Y = 0
 
             
     def initZ(self):
     # Move Z servo to home position by driving clockwise until the limit switch is actuated.
         self.pi.set_servo_pulsewidth(self.SERVO_Z, self.INWARD)
-        while self.pi.read(self.SENSOR_Z):
+        while self.pi.read(self.SWITCH_Z):
             pass
         self.pi.set_servo_pulsewidth(self.SERVO_Z, 0)
+        
         self.isPenUp = True
 
 
@@ -358,11 +356,11 @@ void makeStepZ(int direction){
             for i in range(self.PEN_HUB):
                 self.makeStepZ(0)
     
-        self.isPenUp = 0;
+        self.isPenUp = False
 
             
     def penUp(self):
-        self.initZ();
+        self.initZ()
 
 
 void moveToXY(unsigned int newX, unsigned int newY){
@@ -654,20 +652,20 @@ def setup(pi):
 
 
 
-  pinMode(SENSOR_X, INPUT);
-  digitalWrite(SENSOR_X, HIGH);
-  pinMode(SWITCH_X, INPUT);
-  digitalWrite(SWITCH_X, HIGH);
+#  pinMode(SENSOR_X, INPUT);
+#  digitalWrite(SENSOR_X, HIGH);
+#  pinMode(SWITCH_X, INPUT);
+#  digitalWrite(SWITCH_X, HIGH);
 
-  pinMode(SENSOR_Y, INPUT);
-  digitalWrite(SENSOR_Y, HIGH);
-  pinMode(SWITCH_Y, INPUT);
-  digitalWrite(SWITCH_Y, HIGH);
+#  pinMode(SENSOR_Y, INPUT);
+#  digitalWrite(SENSOR_Y, HIGH);
+#  pinMode(SWITCH_Y, INPUT);
+#  digitalWrite(SWITCH_Y, HIGH);
 
-  pinMode(SENSOR_Z, INPUT);
-  digitalWrite(SENSOR_Z, HIGH);
-  pinMode(SWITCH_Z, INPUT);
-  digitalWrite(SWITCH_Z, HIGH);
+#  pinMode(SENSOR_Z, INPUT);
+#  digitalWrite(SENSOR_Z, HIGH);
+#  pinMode(SWITCH_Z, INPUT);
+#  digitalWrite(SWITCH_Z, HIGH);
 
 #  pinMode(MENU_ENTER, INPUT);
 #  digitalWrite(MENU_ENTER, HIGH);
@@ -691,14 +689,14 @@ def setup(pi):
 
     print("Ready to run.")
 
-    X = 0
-    Y = 0
+#    X = 0
+#    Y = 0
     menueLevel = 1
     menueSubLevel = 0
     selectedChar = 1
 
 
-void loop(){
+def loop():
   if(menueSubLevel == 0){
     lcd.setCursor(0, 0);
     lcd.print("Main menue:     ");
