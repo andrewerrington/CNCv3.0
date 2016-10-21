@@ -16,7 +16,7 @@ font["A"]=( ((0,56), (21,1), (29,1), (51,56), (43,56), (37,40) , (14,40), (8,56)
 font["B"]=( ((0,55,0,0,21,0,22,0,24,0,25,0,27,1,28,1,29,1,30,1,31,2,31,3,33,3,33,3,34,4,35,4,36,6,36,6,37,7,37,8,37,9,38,10,38,10,39,12,39,12,39,13,39,14,39,15,39,16,39,17,39,18,38,18,38,19,37,20,37,21,36,22,36,22,35,23,34,24,34,24,33,25,32,25,31,26,33,26,34,27,34,27,36,28,36,28,37,29,38,30,39,31,39,31,40,33,40,34,41,34,41,36,42,37,42,38,42,39,42,40,42,41,41,42,41,43,41,43,40,45,40,45,40,46,39,47,39,48,39,48,38,49,37,50,37,51,36,51,36,51,35,52,34,52,34,52,33,53,33,53,31,54,31,54,30,54,29,54,28,54,27,55,26,55,24,55,21,55,0,55)),
             ((7,23,19,23,21,23,24,22,24,22,25,22,25,22,26,22,27,22,27,22,28,21,28,21,29,21,30,20,30,20,30,19,31,19,31,18,31,18,31,17,31,16,31,16,31,15,31,15,31,14,31,13,31,13,31,12,31,12,31,11,31,10,30,10,30,9,30,9,29,9,29,8,28,8,28,7,27,7,27,7,26,7,25,7,24,6,24,6,21,6,18,6,7,6,7,23)),
             ((7,48,21,48,22,48,24,48,25,48,25,48,26,48,27,48,27,48,28,48,28,48,29,48,29,47,30,47,30,46,31,46,31,46,31,46,31,45,32,45,32,45,33,44,33,43,33,43,33,43,34,42,34,42,34,41,34,40,34,40,34,39,34,38,34,37,34,37,34,36,33,36,33,35,33,34,33,34,32,33,31,33,31,32,31,32,30,31,30,31,29,31,28,31,27,30,27,30,25,30,25,30,24,30,22,30,20,30,7,30,7,48)) )
-
+'''
 #C
 font["C"]=( ((41,37), (49,38), (48,40), (47,43), (46,44), (45,46), (44,48),
              (43,49), (42,50), (40,52), (39,53), (37,54), (36,55), (34,55),
@@ -35,7 +35,7 @@ font["C"]=( ((41,37), (49,38), (48,40), (47,43), (46,44), (45,46), (44,48),
              (15,9), (14,10), (14,11), (12,12), (12,13), (11,14), (11,15),
              (10,16), (9,17), (9,19), (9,20), (9,21), (8,23), (8,24), (8,25),
              8,26,8,28,8,29,8,31,8,33,8,34,9,36,9,37,9,38,10,40,11,41,11,43,12,44,12,44,14,46,14,46,15,47,16,48,17,49,18,49,20,49,21,50,22,50,23,50,24,50,26,50,27,50,28,50,30,50,31,50,32,49,33,49,34,47,36,47,37,46,37,45,39,44,39,43,40,41,40,40,41,38,41,37)) )
-''' 
+ 
 //D
 const unsigned char PROGMEM coords_D_01[]={0,55,0,0,19,0,22,0,25,0,27,1,28,1,29,1,30,1,31,1,32,2,33,3,34,3,35,4,36,4,37,5,38,6,39,7,40,8,40,9,42,10,42,12,43,13,43,14,44,16,44,17,45,19,45,21,45,22,45,24,45,25,45,27,45,30,45,32,45,33,45,34,45,36,44,37,44,39,43,39,43,40,43,42,42,43,42,43,41,45,41,45,40,46,40,47,39,48,39,48,38,49,37,49,37,50,36,51,35,51,34,52,34,52,33,52,32,53,31,53,31,54,30,54,29,54,28,54,27,54,25,55,25,55,22,55,20,55,0,55};
 const unsigned char PROGMEM coords_D_02[]={7,48,19,48,22,48,23,48,24,48,25,48,26,48,27,47,28,47,28,47,29,46,30,46,30,46,31,45,31,45,32,45,33,44,33,43,34,43,34,42,35,41,35,40,36,39,36,38,36,37,37,36,37,35,37,34,37,33,37,31,38,30,38,27,38,25,38,22,37,21,37,19,37,18,36,16,36,15,35,13,34,12,34,12,33,10,32,10,31,9,30,8,29,8,28,7,27,7,27,7,25,7,24,6,23,6,22,6,19,6,7,6,7,48};
@@ -204,7 +204,7 @@ class CNC:
     # Move servos one step by turning them on for a short
     # time and checking for a pulse on the rotation switch.
 
-    def makeStepX(direction):
+    def makeStepX(self,direction):
 
     #char stringX[4];
     #char stringY[4];
@@ -241,18 +241,18 @@ class CNC:
         self.pi.set_servo_pulsewidth(self.SERVO_X, 0)
     
         if direction==0:
-            self.X++
+            self.X+=1
         else:
-            self.X--
+            self.X-=1
     
-        print("X = %3d, Y = %3d"%(self.X,self.Y) 
+        print("X = %3d, Y = %3d"%(self.X,self.Y))
     
     #  sprintf(stringX, "% 3d", X);
     #  sprintf(stringY, "% 3d", Y);
     #  lcd.setCursor(0, 1);lcd.print("   X=");lcd.print(stringX);lcd.print(", Y=");lcd.print(stringY);lcd.print("    ");
 
     
-    def makeStepY(direction):
+    def makeStepY(self,direction):
 
         self.pi.set_servo_pulsewidth(self.SERVO_Y, self.CENTRE)
 
@@ -281,14 +281,14 @@ class CNC:
         self.pi.set_servo_pulsewidth(self.SERVO_Y, 0)
     
         if direction==0:
-            self.Y++
+            self.Y+=1
         else:
-            self.Y--
+            self.Y-=1
 
-        print("X = %3d, Y = %3d"%(self.X,self.Y) 
+        print("X = %3d, Y = %3d"%(self.X,self.Y) )
 
             
-    def makeStepZ(direction):
+    def makeStepZ(self,direction):
 
         self.pi.set_servo_pulsewidth(self.SERVO_Z, self.CENTRE)
 
@@ -362,7 +362,7 @@ class CNC:
     def penUp(self):
         self.initZ()
 
-
+'''
 void moveToXY(unsigned int newX, unsigned int newY){
   int directionX = 0;
   int directionY = 0;
@@ -635,8 +635,8 @@ void plot(int character){
   Y = 0;
 
 }
-
-def setup(pi):
+'''
+def setup(myCNC):
 
 #  // set up the LCD's number of columns and rows:
 #  lcd.begin(16, 2);
@@ -648,8 +648,6 @@ def setup(pi):
 
     print("Homofaciens.de")
     print("CNC v3.0")
-
-
 
 
 #  pinMode(SENSOR_X, INPUT);
@@ -675,15 +673,15 @@ def setup(pi):
 #  digitalWrite(MENU_MINUS, HIGH);
 
     print("Initializing Z")
-    initZ()
+    #myCNC.initZ()
 #  lcd.setCursor(0, 1);
 #  lcd.print("Initializing   Y");
     print("Initializing Y")
-    initY()
+    #myCNC.initY()
 #  lcd.setCursor(0, 1);
 #  lcd.print("Initializing   X");
     print("Initializing X")
-    initX()
+    myCNC.initX()
 #  lcd.setCursor(0, 1);
 #  lcd.print("Ready to run    ");
 
@@ -696,7 +694,16 @@ def setup(pi):
     selectedChar = 1
 
 
-def loop():
+def loop(myCNC):
+    time.sleep(3)
+    for i in range(10):
+        myCNC.makeStepX(0)
+    time.sleep(3)
+    for i in range(5):
+        myCNC.makeStepX(1)
+    time.sleep(3)
+    pass
+'''
   if(menueSubLevel == 0){
     lcd.setCursor(0, 0);
     lcd.print("Main menue:     ");
@@ -868,7 +875,7 @@ def loop():
     delay(100);
   }
 }
-
+'''
 
 if __name__ == "__main__":
     pi = pigpio.pi()
@@ -876,5 +883,6 @@ if __name__ == "__main__":
         print("Could not connect to PiGPIO.  Is pigpiod running?  Try 'sudo pigpiod'.")
         exit()
     
-    setup()
-    loop()
+    myCNC = CNC(pi,24,25,23,17,27,22,5,6,13)
+    setup(myCNC)
+    loop(myCNC)
