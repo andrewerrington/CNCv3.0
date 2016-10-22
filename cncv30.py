@@ -8,34 +8,30 @@ import pigpio
 import time
 
 font = {}
-#A
-font["A"]=( ((0,56), (21,1), (29,1), (51,56), (43,56), (37,40) , (14,40), (8,56), (0,56)),
-            ((16,33), (34,33), (28,18), (26,11), (25,9), (25,7), (24,9), (23,12), (22,14), (22,17), (16,33)) )
 
-#B
-font["B"]=( ((0,55,0,0,21,0,22,0,24,0,25,0,27,1,28,1,29,1,30,1,31,2,31,3,33,3,33,3,34,4,35,4,36,6,36,6,37,7,37,8,37,9,38,10,38,10,39,12,39,12,39,13,39,14,39,15,39,16,39,17,39,18,38,18,38,19,37,20,37,21,36,22,36,22,35,23,34,24,34,24,33,25,32,25,31,26,33,26,34,27,34,27,36,28,36,28,37,29,38,30,39,31,39,31,40,33,40,34,41,34,41,36,42,37,42,38,42,39,42,40,42,41,41,42,41,43,41,43,40,45,40,45,40,46,39,47,39,48,39,48,38,49,37,50,37,51,36,51,36,51,35,52,34,52,34,52,33,53,33,53,31,54,31,54,30,54,29,54,28,54,27,55,26,55,24,55,21,55,0,55)),
-            ((7,23,19,23,21,23,24,22,24,22,25,22,25,22,26,22,27,22,27,22,28,21,28,21,29,21,30,20,30,20,30,19,31,19,31,18,31,18,31,17,31,16,31,16,31,15,31,15,31,14,31,13,31,13,31,12,31,12,31,11,31,10,30,10,30,9,30,9,29,9,29,8,28,8,28,7,27,7,27,7,26,7,25,7,24,6,24,6,21,6,18,6,7,6,7,23)),
-            ((7,48,21,48,22,48,24,48,25,48,25,48,26,48,27,48,27,48,28,48,28,48,29,48,29,47,30,47,30,46,31,46,31,46,31,46,31,45,32,45,32,45,33,44,33,43,33,43,33,43,34,42,34,42,34,41,34,40,34,40,34,39,34,38,34,37,34,37,34,36,33,36,33,35,33,34,33,34,32,33,31,33,31,32,31,32,30,31,30,31,29,31,28,31,27,30,27,30,25,30,25,30,24,30,22,30,20,30,7,30,7,48)) )
+font["A"]=( (0,56,21,1,29,1,51,56,43,56,37,40,14,40,8,56,0,56),
+            (16,33,34,33,28,18,26,11,25,9,25,7,24,9,23,12,22,14,22,17,16,33) )
+
+font["B"]=( (0,55,0,0,21,0,22,0,24,0,25,0,27,1,28,1,29,1,30,1,31,2,31,3,33,3,33,3,34,4,35,4,36,6,36,6,37,7,37,8,37,9,38,10,38,10,39,12,39,12,39,13,39,14,39,15,39,16,39,17,39,18,38,18,38,19,37,20,37,21,36,22,36,22,35,23,34,24,34,24,33,25,32,25,31,26,33,26,34,27,34,27,36,28,36,28,37,29,38,30,39,31,39,31,40,33,40,34,41,34,41,36,42,37,42,38,42,39,42,40,42,41,41,42,41,43,41,43,40,45,40,45,40,46,39,47,39,48,39,48,38,49,37,50,37,51,36,51,36,51,35,52,34,52,34,52,33,53,33,53,31,54,31,54,30,54,29,54,28,54,27,55,26,55,24,55,21,55,0,55),
+(7,23,19,23,21,23,24,22,24,22,25,22,25,22,26,22,27,22,27,22,28,21,28,21,29,21,30,20,30,20,30,19,31,19,31,18,31,18,31,17,31,16,31,16,31,15,31,15,31,14,31,13,31,13,31,12,31,12,31,11,31,10,30,10,30,9,30,9,29,9,29,8,28,8,28,7,27,7,27,7,26,7,25,7,24,6,24,6,21,6,18,6,7,6,7,23),
+(7,48,21,48,22,48,24,48,25,48,25,48,26,48,27,48,27,48,28,48,28,48,29,48,29,47,30,47,30,46,31,46,31,46,31,46,31,45,32,45,32,45,33,44,33,43,33,43,33,43,34,42,34,42,34,41,34,40,34,40,34,39,34,38,34,37,34,37,34,36,33,36,33,35,33,34,33,34,32,33,31,33,31,32,31,32,30,31,30,31,29,31,28,31,27,30,27,30,25,30,25,30,24,30,22,30,20,30,7,30,7,48) )
+
+font["C"]-( (41,37,49,38,48,40,47,43,46,44,45,46,44,48,43,49,42,50,40,52,39,53,37,54,36,55,34,55,32,56,30,56,28,56,26,56,24,56,22,56,20,56,18,56,17,55,15,55,13,54,12,53,11,52,9,51,8,50,7,49,6,47,5,46,4,44,3,43,3,41,2,39,2,37,1,35,1,34,0,32,0,30,0,28,0,26,0,24,1,22,1,20,2,18,2,16,3,14,3,13,5,11,5,10,6,8,8,7,9,6,10,5,11,4,13,4,14,2,16,2,18,1,19,1,21,1,23,0,24,0,26,0,28,0,30,0,32,1,34,1,35,2,37,2,39,3,40,4,41,5,42,7,43,8,45,9,45,11,46,13,47,14,48,16,40,17,40,16,39,15,39,14,38,13,37,11,37,10,36,10,35,9,34,8,33,8,32,7,31,7,30,7,28,7,27,6,26,6,24,6,23,7,21,7,20,7,19,7,18,8,17,8,15,9,14,10,14,11,12,12,12,13,11,14,11,15,10,16,9,17,9,19,9,20,9,21,8,23,8,24,8,25,8,26,8,28,8,29,8,31,8,33,8,34,9,36,9,37,9,38,10,40,11,41,11,43,12,44,12,44,14,46,14,46,15,47,16,48,17,49,18,49,20,49,21,50,22,50,23,50,24,50,26,50,27,50,28,50,30,50,31,50,32,49,33,49,34,47,36,47,37,46,37,45,39,44,39,43,40,41,40,40,41,38,41,37) )
+
+
 '''
-#C
-font["C"]=( ((41,37), (49,38), (48,40), (47,43), (46,44), (45,46), (44,48),
-             (43,49), (42,50), (40,52), (39,53), (37,54), (36,55), (34,55),
-             (32,56), (30,56), (28,56), (26,56), (24,56), (22,56), (20,56),
-             (18,56), (17,55), (15,55), (13,54), (12,53), (11,52), (9,51),
-             (8,50), (7,49), (6,47), (5,46), (4,44), (3,43), (3,41), (2,39),
-             (2,37), (1,35), (1,34), (0,32), (0,30), (0,28), (0,26), (0,24),
-             (1,22), (1,20), (2,18), (2,16), (3,14), (3,13), (5,11), (5,10),
-             (6,8), (8,7), (9,6), (10,5), (11,4), (13,4), (14,2), (16,2),
-             (18,1), (19,1), (21,1), (23,0), (24,0), (26,0), (28,0), (30,0),
-             (32,1), (34,1), (35,2), (37,2), (39,3), (40,4), (41,5), (42,7),
-             (43,8), (45,9), (45,11), (46,13), (47,14), (48,16), (40,17),
-             (40,16), (39,15), (39,14), (38,13), (37,11), (37,10), (36,10),
-             (35,9), (34,8), (33,8), (32,7), (31,7), (30,7), (28,7), (27,6),
-             (26,6), (24,6), (23,7), (21,7), (20,7), (19,7), (18,8), (17,8),
-             (15,9), (14,10), (14,11), (12,12), (12,13), (11,14), (11,15),
-             (10,16), (9,17), (9,19), (9,20), (9,21), (8,23), (8,24), (8,25),
-             8,26,8,28,8,29,8,31,8,33,8,34,9,36,9,37,9,38,10,40,11,41,11,43,12,44,12,44,14,46,14,46,15,47,16,48,17,49,18,49,20,49,21,50,22,50,23,50,24,50,26,50,27,50,28,50,30,50,31,50,32,49,33,49,34,47,36,47,37,46,37,45,39,44,39,43,40,41,40,40,41,38,41,37)) )
- 
+//A
+const unsigned char PROGMEM coords_A_01[]={0,56,21,1,29,1,51,56,43,56,37,40,14,40,8,56,0,56};
+const unsigned char PROGMEM coords_A_02[]={16,33,34,33,28,18,26,11,25,9,25,7,24,9,23,12,22,14,22,17,16,33};
+
+//B
+const unsigned char PROGMEM coords_B_01[]={0,55,0,0,21,0,22,0,24,0,25,0,27,1,28,1,29,1,30,1,31,2,31,3,33,3,33,3,34,4,35,4,36,6,36,6,37,7,37,8,37,9,38,10,38,10,39,12,39,12,39,13,39,14,39,15,39,16,39,17,39,18,38,18,38,19,37,20,37,21,36,22,36,22,35,23,34,24,34,24,33,25,32,25,31,26,33,26,34,27,34,27,36,28,36,28,37,29,38,30,39,31,39,31,40,33,40,34,41,34,41,36,42,37,42,38,42,39,42,40,42,41,41,42,41,43,41,43,40,45,40,45,40,46,39,47,39,48,39,48,38,49,37,50,37,51,36,51,36,51,35,52,34,52,34,52,33,53,33,53,31,54,31,54,30,54,29,54,28,54,27,55,26,55,24,55,21,55,0,55};
+const unsigned char PROGMEM coords_B_02[]={7,23,19,23,21,23,24,22,24,22,25,22,25,22,26,22,27,22,27,22,28,21,28,21,29,21,30,20,30,20,30,19,31,19,31,18,31,18,31,17,31,16,31,16,31,15,31,15,31,14,31,13,31,13,31,12,31,12,31,11,31,10,30,10,30,9,30,9,29,9,29,8,28,8,28,7,27,7,27,7,26,7,25,7,24,6,24,6,21,6,18,6,7,6,7,23};
+const unsigned char PROGMEM coords_B_03[]={7,48,21,48,22,48,24,48,25,48,25,48,26,48,27,48,27,48,28,48,28,48,29,48,29,47,30,47,30,46,31,46,31,46,31,46,31,45,32,45,32,45,33,44,33,43,33,43,33,43,34,42,34,42,34,41,34,40,34,40,34,39,34,38,34,37,34,37,34,36,33,36,33,35,33,34,33,34,32,33,31,33,31,32,31,32,30,31,30,31,29,31,28,31,27,30,27,30,25,30,25,30,24,30,22,30,20,30,7,30,7,48};
+
+//C
+const unsigned char PROGMEM coords_C_01[]={41,37,49,38,48,40,47,43,46,44,45,46,44,48,43,49,42,50,40,52,39,53,37,54,36,55,34,55,32,56,30,56,28,56,26,56,24,56,22,56,20,56,18,56,17,55,15,55,13,54,12,53,11,52,9,51,8,50,7,49,6,47,5,46,4,44,3,43,3,41,2,39,2,37,1,35,1,34,0,32,0,30,0,28,0,26,0,24,1,22,1,20,2,18,2,16,3,14,3,13,5,11,5,10,6,8,8,7,9,6,10,5,11,4,13,4,14,2,16,2,18,1,19,1,21,1,23,0,24,0,26,0,28,0,30,0,32,1,34,1,35,2,37,2,39,3,40,4,41,5,42,7,43,8,45,9,45,11,46,13,47,14,48,16,40,17,40,16,39,15,39,14,38,13,37,11,37,10,36,10,35,9,34,8,33,8,32,7,31,7,30,7,28,7,27,6,26,6,24,6,23,7,21,7,20,7,19,7,18,8,17,8,15,9,14,10,14,11,12,12,12,13,11,14,11,15,10,16,9,17,9,19,9,20,9,21,8,23,8,24,8,25,8,26,8,28,8,29,8,31,8,33,8,34,9,36,9,37,9,38,10,40,11,41,11,43,12,44,12,44,14,46,14,46,15,47,16,48,17,49,18,49,20,49,21,50,22,50,23,50,24,50,26,50,27,50,28,50,30,50,31,50,32,49,33,49,34,47,36,47,37,46,37,45,39,44,39,43,40,41,40,40,41,38,41,37};
+
 //D
 const unsigned char PROGMEM coords_D_01[]={0,55,0,0,19,0,22,0,25,0,27,1,28,1,29,1,30,1,31,1,32,2,33,3,34,3,35,4,36,4,37,5,38,6,39,7,40,8,40,9,42,10,42,12,43,13,43,14,44,16,44,17,45,19,45,21,45,22,45,24,45,25,45,27,45,30,45,32,45,33,45,34,45,36,44,37,44,39,43,39,43,40,43,42,42,43,42,43,41,45,41,45,40,46,40,47,39,48,39,48,38,49,37,49,37,50,36,51,35,51,34,52,34,52,33,52,32,53,31,53,31,54,30,54,29,54,28,54,27,54,25,55,25,55,22,55,20,55,0,55};
 const unsigned char PROGMEM coords_D_02[]={7,48,19,48,22,48,23,48,24,48,25,48,26,48,27,47,28,47,28,47,29,46,30,46,30,46,31,45,31,45,32,45,33,44,33,43,34,43,34,42,35,41,35,40,36,39,36,38,36,37,37,36,37,35,37,34,37,33,37,31,38,30,38,27,38,25,38,22,37,21,37,19,37,18,36,16,36,15,35,13,34,12,34,12,33,10,32,10,31,9,30,8,29,8,28,7,27,7,27,7,25,7,24,6,23,6,22,6,19,6,7,6,7,48};
@@ -149,6 +145,8 @@ const unsigned char PROGMEM coords_0_02[]={6,28,6,31,6,34,7,37,7,39,7,41,8,43,8,
 
 class CNC:
     
+    # Class for homofaciens CNC v3.0 cardboard CNC
+    
     def __init__(self, pi, SENSOR_X, SWITCH_X, SERVO_X, 
                  SENSOR_Y, SWITCH_Y, SERVO_Y,
                  SENSOR_Z, SWITCH_Z, SERVO_Z):
@@ -201,25 +199,21 @@ class CNC:
         self.OUTWARD = 1000 # anticlockwise, push the carriage away
         
         
-    # Move servos one step by turning them on for a short
-    # time and checking for a pulse on the rotation switch.
+    # Move servos one step by turning them on and checking for a pulse
+    # on the rotation switch.
 
     def makeStepX(self,direction):
 
-    #char stringX[4];
-    #char stringY[4];
-
-    #unsigned long timeNow;
-    #unsigned long timeY;
-
-    #servoX.attach(SERVO_X);
+        # Power up the servo without moving it
         self.pi.set_servo_pulsewidth(self.SERVO_X, self.CENTRE)
 
-        if direction==0:
+        # Move the servo inward or outward.
+        if direction:
             self.pi.set_servo_pulsewidth(self.SERVO_X, self.OUTWARD)
         else:
             self.pi.set_servo_pulsewidth(self.SERVO_X, self.INWARD)
 
+        # Wait until the sensor is touching metal.
         while self.pi.read(self.SENSOR_X):
             pass
 
@@ -229,6 +223,7 @@ class CNC:
         if (timeX > timeNow):
             timeX = timeNow
 
+        # Now debounce the input signal.  It must remain low for 0.2s
         while(timeNow - timeX < 0.2):
             if not(self.pi.read(self.SENSOR_X)):
                 timeX = time.time()
@@ -237,26 +232,23 @@ class CNC:
             if (timeX > timeNow):
                 timeX = timeNow
 
-    #servoX.detach();
+        # Remove control signal from servo
         self.pi.set_servo_pulsewidth(self.SERVO_X, 0)
     
-        if direction==0:
+        # Update the position in memory
+        if direction:
             self.X+=1
         else:
             self.X-=1
     
         print("X = %3d, Y = %3d"%(self.X,self.Y))
-    
-    #  sprintf(stringX, "% 3d", X);
-    #  sprintf(stringY, "% 3d", Y);
-    #  lcd.setCursor(0, 1);lcd.print("   X=");lcd.print(stringX);lcd.print(", Y=");lcd.print(stringY);lcd.print("    ");
 
     
     def makeStepY(self,direction):
 
         self.pi.set_servo_pulsewidth(self.SERVO_Y, self.CENTRE)
 
-        if direction==0:
+        if direction:
             self.pi.set_servo_pulsewidth(self.SERVO_Y, self.OUTWARD)
         else:
             self.pi.set_servo_pulsewidth(self.SERVO_Y, self.INWARD)
@@ -280,7 +272,7 @@ class CNC:
 
         self.pi.set_servo_pulsewidth(self.SERVO_Y, 0)
     
-        if direction==0:
+        if direction:
             self.Y+=1
         else:
             self.Y-=1
@@ -292,7 +284,7 @@ class CNC:
 
         self.pi.set_servo_pulsewidth(self.SERVO_Z, self.CENTRE)
 
-        if direction==0:
+        if direction:
             self.pi.set_servo_pulsewidth(self.SERVO_Z, self.OUTWARD)
         else:
             self.pi.set_servo_pulsewidth(self.SERVO_Z, self.INWARD)
@@ -318,43 +310,57 @@ class CNC:
 
 
     def initX(self):
-    # Move X servo to home position by driving clockwise until the limit switch is actuated.
-    #  servoX.attach(SERVO_X);
-    #  servoX.write(180);
+
+        # Move X servo to home position by driving clockwise until the
+        # limit switch is actuated.
+        
+        # Turn on servo, running clockwise
         self.pi.set_servo_pulsewidth(self.SERVO_X, self.INWARD)
-    #   while(digitalRead(SWITCH_X) == 1);
+
+        # If the limit switch is 'high' (not pressed) then do nothing
         while self.pi.read(self.SWITCH_X):
             pass
-    #  servoX.detach();
+        
+        # When the limit switch is 'low' (pressed) fall through to here
+        # Turn off the servo
         self.pi.set_servo_pulsewidth(self.SERVO_X, 0)
         
+        # Reset the X position in memory
         self.X = 0
 
             
     def initY(self):
-    # Move Y servo to home position by driving clockwise until the limit switch is actuated.
+
+        # Move Y servo to home position by driving clockwise until the
+        # limit switch is actuated.
         self.pi.set_servo_pulsewidth(self.SERVO_Y, self.INWARD)
+        
         while self.pi.read(self.SWITCH_Y):
             pass
+        
         self.pi.set_servo_pulsewidth(self.SERVO_Y, 0)
         
         self.Y = 0
 
             
     def initZ(self):
-    # Move Z servo to home position by driving clockwise until the limit switch is actuated.
+        # Move Z servo to home position by driving clockwise until the
+        # limit switch is actuated.
         self.pi.set_servo_pulsewidth(self.SERVO_Z, self.INWARD)
+        
         while self.pi.read(self.SWITCH_Z):
             pass
+        
         self.pi.set_servo_pulsewidth(self.SERVO_Z, 0)
         
         self.isPenUp = True
 
 
     def penDown(self):
-        if isPenUp:
+
+        if self.isPenUp:
             for i in range(self.PEN_HUB):
-                self.makeStepZ(0)
+                self.makeStepZ(True)
     
         self.isPenUp = False
 
@@ -362,110 +368,91 @@ class CNC:
     def penUp(self):
         self.initZ()
 
+
+    def moveToXY(self, newX, newY):
+        
+        stepDiffRest = 0.0
+        
+        print("GoTo %3d, %3d",(newX,newY))
+        
+        if (self.X < newX):
+            directionX = True
+            diffX = newX - self.X
+        else:
+            directionX = False
+            diffX = self.X - newX
+
+        if (self.Y < newY):
+            directionY = True
+            diffY = newY - self.Y
+        else:
+            directionY = False
+            diffY = self.Y - newY
+
+        if (diffX == 0 and diffY == 0):
+            return
+
+        if (diffX > diffY):
+            stepDiff = float(diffY)/float(diffX)
+            for i in range(diffX):
+                makeStepX(directionX)
+                stepDiffRest += stepDiff
+                if(stepDiffRest >= 1.0):
+                    stepDiffRest -= 1.0
+                    makeStepY(directionY)
+        else:
+            stepDiff = float(diffX)/float(diffY)
+            for i in range(diffY):
+                stepDiffRest += stepDiff
+                if(stepDiffRest >= 1.0):
+                    stepDiffRest -= 1.0
+                    makeStepX(directionX)
+                makeStepY(directionY)
+
+        while (self.X != newX):
+            makeStepX(directionX)
+
+        while(self.Y != newY):
+            makeStepY(directionY);
+
+
+    def plotCoordinates(self,coordinates):
+
+        self.penUp()
+
+        for coordinateString in coordinates:
+            for i in range(0, len(coordinateString), 2):
+                cx = coordinateString[i]
+                cy = coordinateString[i + 1]
+                self.moveToXY(cx, cy)
+                if (i==0):
+                    self.penDown()
+
+        self.penUp()
+
+
+    def plot(self, character):
+        
+        if character in font:
+            print("Plotting %s"%character)
+            print("in 3 seconds")
+            time.sleep(1)
+            print("in 2 seconds")
+            time.sleep(1)
+            print("in 1 second")
+            time.sleep(1)
+            self.plotCoordinates(font[character])
+
+            self.penUp()
+            # goto coordinates 0, 0
+            self.initX()
+            self.initY()
+
+        else:
+            print("Character '%s' not in font."%character)
+
+
 '''
-void moveToXY(unsigned int newX, unsigned int newY){
-  int directionX = 0;
-  int directionY = 0;
-  unsigned int diffX;
-  unsigned int diffY;
-  unsigned int i;
-  double stepDiff = 0.0;
-  double stepDiffRest = 0.0;
-  char stringX[4];
-  char stringY[4];
-
-  sprintf(stringX, "% 3d", newX);
-  sprintf(stringY, "% 3d", newY);
-  lcd.setCursor(0, 0);lcd.print("GoTo ");lcd.print(stringX);lcd.print(",   ");lcd.print(stringY);lcd.print("   ");
-
-  if(X < newX){
-    directionX = 0;
-    diffX = newX - X;
-  }
-  else{
-    directionX = 1;
-    diffX = X - newX;
-  }
-
-  if(Y < newY){
-    directionY = 0;
-    diffY = newY - Y;
-  }
-  else{
-    directionY = 1;
-    diffY = Y - newY;
-  }
-
-  if(diffX == 0 && diffY == 0){
-    return;
-  }
-
-  if(diffX > diffY){
-    stepDiff = (double)(diffY)/(double)(diffX);
-    for(i=0; i < diffX; i++){
-      makeStepX(directionX);
-      stepDiffRest += stepDiff;
-      if(stepDiffRest >= 1.0){
-        stepDiffRest -= 1.0;
-        makeStepY(directionY);
-      }
-    }
-  }
-  else{
-    stepDiff = (double)(diffX)/(double)(diffY);
-    for(i=0; i < diffY; i++){
-      stepDiffRest += stepDiff;
-      if(stepDiffRest >= 1.0){
-        stepDiffRest -= 1.0;
-        makeStepX(directionX);
-      }
-      makeStepY(directionY);
-    }
-  }
-
-  while(X != newX){
-    makeStepX(directionX);
-  }
-
-  while(Y != newY){
-    makeStepY(directionY);
-  }
-}
-
-void plotCoordinates(const unsigned char *buffer, unsigned int bufferSize){
-
-//lcd.setCursor(0, 1);lcd.print("bufferSize=");lcd.print(bufferSize);lcd.print(" ");
-//delay(10000);
-
-  unsigned int i;
-  unsigned char cx;
-  unsigned char cy;
-
-  penUp();
-  for(i=0; i<bufferSize; i+=2){
-    cx =  pgm_read_byte_near(buffer + i);
-    cy =  pgm_read_byte_near(buffer + i + 1);
-    moveToXY(cx, cy);
-    if(i==0){
-      penDown();
-    }
-//lcd.setCursor(10, 1);lcd.print("i=");lcd.print(i);lcd.print(" ");
-    //delay(1000);
-  }
-
-  penUp();
-
-}
-
-void plot(int character){
-  lcd.setCursor(0, 0);lcd.print("Plotting no");lcd.print(character);lcd.print(" ");
-  lcd.setCursor(0, 0);lcd.print("in 3 seconds    ");
-  delay(1000);
-  lcd.setCursor(0, 0);lcd.print("in 2 seconds    ");
-  delay(1000);
-  lcd.setCursor(0, 0);lcd.print("in 1 seconds    ");
-  delay(1000);
-
   if(character == 1){// A
     plotCoordinates(coords_A_01, sizeof(coords_A_01));
     plotCoordinates(coords_A_02, sizeof(coords_A_02));
@@ -624,18 +611,10 @@ void plot(int character){
     plotCoordinates(coords_9_01, sizeof(coords_9_01));
     plotCoordinates(coords_9_02, sizeof(coords_9_02));
   }
-
-
-
-  penUp();
-  //goto coordinates 0, 0
-  initX();
-  initY();
-  X = 0;
-  Y = 0;
-
-}
 '''
+
+
+
 def setup(myCNC):
 
 #  // set up the LCD's number of columns and rows:
