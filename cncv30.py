@@ -177,13 +177,13 @@ class CNC:
         self.pi.set_mode(self.SENSOR_Y, pigpio.INPUT)
         self.pi.set_pull_up_down(self.SENSOR_Y, pigpio.PUD_UP)
         self.pi.set_mode(self.SWITCH_Y, pigpio.INPUT)
-        self.pi.set_pull_up_down(self.SENSOR_Y, pigpio.PUD_UP)
+        self.pi.set_pull_up_down(self.SWITCH_Y, pigpio.PUD_UP)
         self.pi.set_mode(self.SERVO_Y, pigpio.OUTPUT)
 
         self.pi.set_mode(self.SENSOR_Z, pigpio.INPUT)
         self.pi.set_pull_up_down(self.SENSOR_Z, pigpio.PUD_UP)
         self.pi.set_mode(self.SWITCH_Z, pigpio.INPUT)
-        self.pi.set_pull_up_down(self.SENSOR_Z, pigpio.PUD_UP)
+        self.pi.set_pull_up_down(self.SWITCH_Z, pigpio.PUD_UP)
         self.pi.set_mode(self.SERVO_Z, pigpio.OUTPUT)
 
         self.X = 0
@@ -195,7 +195,7 @@ class CNC:
         
         # Servo pulse widths to move continuous-rotation servos
         self.CENTRE = 1500  # off
-        self.INWARD = 1900  # clockwise, draw the carriage closer
+        self.INWARD = 1800  # clockwise, draw the carriage closer
         self.OUTWARD = 1000 # anticlockwise, push the carriage away
     
 
@@ -276,7 +276,7 @@ class CNC:
         else:
             self.Y-=1
 
-        print("X = %3d, Y = %3d"%(self.X,self.Y) )
+        print("X = %3d, Y = %3d"%(self.X,self.Y))
 
             
     def makeStepZ(self,direction):
@@ -370,7 +370,7 @@ class CNC:
         
         stepDiffRest = 0.0
         
-        print("GoTo %3d, %3d",(newX,newY))
+        print("GoTo %3d, %3d"%(newX,newY))
         
         if (self.X < newX):
             directionX = True
@@ -392,25 +392,25 @@ class CNC:
         if (diffX > diffY):
             stepDiff = float(diffY)/float(diffX)
             for i in range(diffX):
-                makeStepX(directionX)
+                self.makeStepX(directionX)
                 stepDiffRest += stepDiff
                 if(stepDiffRest >= 1.0):
                     stepDiffRest -= 1.0
-                    makeStepY(directionY)
+                    self.makeStepY(directionY)
         else:
             stepDiff = float(diffX)/float(diffY)
             for i in range(diffY):
                 stepDiffRest += stepDiff
                 if(stepDiffRest >= 1.0):
                     stepDiffRest -= 1.0
-                    makeStepX(directionX)
-                makeStepY(directionY)
+                    self.makeStepX(directionX)
+                self.makeStepY(directionY)
 
         while (self.X != newX):
-            makeStepX(directionX)
+            self.makeStepX(directionX)
 
         while(self.Y != newY):
-            makeStepY(directionY)
+            self.makeStepY(directionY)
 
 
     def plotCoordinates(self,coordinates):
@@ -449,168 +449,6 @@ class CNC:
             print("Character '%s' not in font."%character)
 
 
-'''
-  if(character == 1){// A
-    plotCoordinates(coords_A_01, sizeof(coords_A_01));
-    plotCoordinates(coords_A_02, sizeof(coords_A_02));
-  }
-
-  if(character == 2){// B
-    plotCoordinates(coords_B_01, sizeof(coords_B_01));
-    plotCoordinates(coords_B_02, sizeof(coords_B_02));
-    plotCoordinates(coords_B_03, sizeof(coords_B_03));
-  }
-
-  if(character == 3){// C
-    plotCoordinates(coords_C_01, sizeof(coords_C_01));
-  }
-
-  if(character == 4){// D
-    plotCoordinates(coords_D_01, sizeof(coords_D_01));
-    plotCoordinates(coords_D_02, sizeof(coords_D_02));
-  }
-
-  if(character == 5){// E
-    plotCoordinates(coords_E_01, sizeof(coords_E_01));
-  }
-
-  if(character == 6){// F
-    plotCoordinates(coords_F_01, sizeof(coords_F_01));
-  }
-
-  if(character == 7){// G
-    plotCoordinates(coords_G_01, sizeof(coords_G_01));
-  }
-
-  if(character == 8){// H
-    plotCoordinates(coords_H_01, sizeof(coords_H_01));
-    plotCoordinates(coords_D_02, sizeof(coords_D_02));
-  }
-
-  if(character == 9){// I
-    plotCoordinates(coords_I_01, sizeof(coords_I_01));
-  }
-
-  if(character == 10){// J
-    plotCoordinates(coords_J_01, sizeof(coords_J_01));
-  }
-
-  if(character == 11){// K
-    plotCoordinates(coords_K_01, sizeof(coords_K_01));
-  }
-
-  if(character == 12){// L
-    plotCoordinates(coords_L_01, sizeof(coords_L_01));
-  }
-
-  if(character == 13){// M
-    plotCoordinates(coords_M_01, sizeof(coords_M_01));
-  }
-
-  if(character == 14){// N
-    plotCoordinates(coords_N_01, sizeof(coords_N_01));
-  }
-
-  if(character == 15){// O
-    plotCoordinates(coords_O_01, sizeof(coords_O_01));
-    plotCoordinates(coords_O_02, sizeof(coords_O_02));
-  }
-
-  if(character == 16){// P
-    plotCoordinates(coords_P_01, sizeof(coords_P_01));
-    plotCoordinates(coords_P_02, sizeof(coords_P_02));
-  }
-
-  if(character == 17){// Q
-    plotCoordinates(coords_Q_01, sizeof(coords_Q_01));
-    plotCoordinates(coords_Q_02, sizeof(coords_Q_02));
-  }
-
-  if(character == 18){// R
-    plotCoordinates(coords_R_01, sizeof(coords_R_01));
-    plotCoordinates(coords_R_02, sizeof(coords_R_02));
-  }
-
-  if(character == 19){// S
-    plotCoordinates(coords_S_01, sizeof(coords_S_01));
-  }
-
-  if(character == 20){// T
-    plotCoordinates(coords_T_01, sizeof(coords_T_01));
-  }
-
-  if(character == 21){// U
-    plotCoordinates(coords_U_01, sizeof(coords_U_01));
-  }
-
-  if(character == 22){// V
-    plotCoordinates(coords_V_01, sizeof(coords_V_01));
-  }
-
-  if(character == 23){// W
-    plotCoordinates(coords_W_01, sizeof(coords_W_01));
-  }
-
-  if(character == 24){// X
-    plotCoordinates(coords_X_01, sizeof(coords_X_01));
-  }
-
-  if(character == 25){// Y
-    plotCoordinates(coords_Y_01, sizeof(coords_Y_01));
-  }
-
-  if(character == 26){// Z
-    plotCoordinates(coords_Z_01, sizeof(coords_Z_01));
-  }
-
-  if(character == 27){// 0
-    plotCoordinates(coords_0_01, sizeof(coords_0_01));
-    plotCoordinates(coords_0_02, sizeof(coords_0_02));
-  }
-
-  if(character == 28){// 1
-    plotCoordinates(coords_1_01, sizeof(coords_1_01));
-  }
-
-  if(character == 29){// 2
-    plotCoordinates(coords_2_01, sizeof(coords_2_01));
-  }
-
-  if(character == 30){// 3
-    plotCoordinates(coords_3_01, sizeof(coords_3_01));
-  }
-
-  if(character == 31){// 4
-    plotCoordinates(coords_4_01, sizeof(coords_4_01));
-    plotCoordinates(coords_4_02, sizeof(coords_4_02));
-  }
-
-  if(character == 32){// 5
-    plotCoordinates(coords_5_01, sizeof(coords_5_01));
-  }
-
-  if(character == 33){// 6
-    plotCoordinates(coords_6_01, sizeof(coords_6_01));
-    plotCoordinates(coords_6_02, sizeof(coords_6_02));
-  }
-
-  if(character == 34){// 7
-    plotCoordinates(coords_7_01, sizeof(coords_7_01));
-  }
-
-  if(character == 35){// 8
-    plotCoordinates(coords_8_01, sizeof(coords_8_01));
-    plotCoordinates(coords_8_02, sizeof(coords_8_02));
-    plotCoordinates(coords_8_03, sizeof(coords_8_03));
-  }
-
-  if(character == 36){// 9
-    plotCoordinates(coords_9_01, sizeof(coords_9_01));
-    plotCoordinates(coords_9_02, sizeof(coords_9_02));
-  }
-'''
-
-
 
 def setup(myCNC):
 
@@ -624,22 +462,6 @@ def setup(myCNC):
 
     print("Homofaciens.de")
     print("CNC v3.0")
-
-
-#  pinMode(SENSOR_X, INPUT);
-#  digitalWrite(SENSOR_X, HIGH);
-#  pinMode(SWITCH_X, INPUT);
-#  digitalWrite(SWITCH_X, HIGH);
-
-#  pinMode(SENSOR_Y, INPUT);
-#  digitalWrite(SENSOR_Y, HIGH);
-#  pinMode(SWITCH_Y, INPUT);
-#  digitalWrite(SWITCH_Y, HIGH);
-
-#  pinMode(SENSOR_Z, INPUT);
-#  digitalWrite(SENSOR_Z, HIGH);
-#  pinMode(SWITCH_Z, INPUT);
-#  digitalWrite(SWITCH_Z, HIGH);
 
 #  pinMode(MENU_ENTER, INPUT);
 #  digitalWrite(MENU_ENTER, HIGH);
