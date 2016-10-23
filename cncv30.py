@@ -16,7 +16,7 @@ font["B"]=( (0,55,0,0,21,0,22,0,24,0,25,0,27,1,28,1,29,1,30,1,31,2,31,3,33,3,33,
 (7,23,19,23,21,23,24,22,24,22,25,22,25,22,26,22,27,22,27,22,28,21,28,21,29,21,30,20,30,20,30,19,31,19,31,18,31,18,31,17,31,16,31,16,31,15,31,15,31,14,31,13,31,13,31,12,31,12,31,11,31,10,30,10,30,9,30,9,29,9,29,8,28,8,28,7,27,7,27,7,26,7,25,7,24,6,24,6,21,6,18,6,7,6,7,23),
 (7,48,21,48,22,48,24,48,25,48,25,48,26,48,27,48,27,48,28,48,28,48,29,48,29,47,30,47,30,46,31,46,31,46,31,46,31,45,32,45,32,45,33,44,33,43,33,43,33,43,34,42,34,42,34,41,34,40,34,40,34,39,34,38,34,37,34,37,34,36,33,36,33,35,33,34,33,34,32,33,31,33,31,32,31,32,30,31,30,31,29,31,28,31,27,30,27,30,25,30,25,30,24,30,22,30,20,30,7,30,7,48) )
 
-font["C"]-( (41,37,49,38,48,40,47,43,46,44,45,46,44,48,43,49,42,50,40,52,39,53,37,54,36,55,34,55,32,56,30,56,28,56,26,56,24,56,22,56,20,56,18,56,17,55,15,55,13,54,12,53,11,52,9,51,8,50,7,49,6,47,5,46,4,44,3,43,3,41,2,39,2,37,1,35,1,34,0,32,0,30,0,28,0,26,0,24,1,22,1,20,2,18,2,16,3,14,3,13,5,11,5,10,6,8,8,7,9,6,10,5,11,4,13,4,14,2,16,2,18,1,19,1,21,1,23,0,24,0,26,0,28,0,30,0,32,1,34,1,35,2,37,2,39,3,40,4,41,5,42,7,43,8,45,9,45,11,46,13,47,14,48,16,40,17,40,16,39,15,39,14,38,13,37,11,37,10,36,10,35,9,34,8,33,8,32,7,31,7,30,7,28,7,27,6,26,6,24,6,23,7,21,7,20,7,19,7,18,8,17,8,15,9,14,10,14,11,12,12,12,13,11,14,11,15,10,16,9,17,9,19,9,20,9,21,8,23,8,24,8,25,8,26,8,28,8,29,8,31,8,33,8,34,9,36,9,37,9,38,10,40,11,41,11,43,12,44,12,44,14,46,14,46,15,47,16,48,17,49,18,49,20,49,21,50,22,50,23,50,24,50,26,50,27,50,28,50,30,50,31,50,32,49,33,49,34,47,36,47,37,46,37,45,39,44,39,43,40,41,40,40,41,38,41,37) )
+font["C"]=( (41,37,49,38,48,40,47,43,46,44,45,46,44,48,43,49,42,50,40,52,39,53,37,54,36,55,34,55,32,56,30,56,28,56,26,56,24,56,22,56,20,56,18,56,17,55,15,55,13,54,12,53,11,52,9,51,8,50,7,49,6,47,5,46,4,44,3,43,3,41,2,39,2,37,1,35,1,34,0,32,0,30,0,28,0,26,0,24,1,22,1,20,2,18,2,16,3,14,3,13,5,11,5,10,6,8,8,7,9,6,10,5,11,4,13,4,14,2,16,2,18,1,19,1,21,1,23,0,24,0,26,0,28,0,30,0,32,1,34,1,35,2,37,2,39,3,40,4,41,5,42,7,43,8,45,9,45,11,46,13,47,14,48,16,40,17,40,16,39,15,39,14,38,13,37,11,37,10,36,10,35,9,34,8,33,8,32,7,31,7,30,7,28,7,27,6,26,6,24,6,23,7,21,7,20,7,19,7,18,8,17,8,15,9,14,10,14,11,12,12,12,13,11,14,11,15,10,16,9,17,9,19,9,20,9,21,8,23,8,24,8,25,8,26,8,28,8,29,8,31,8,33,8,34,9,36,9,37,9,38,10,40,11,41,11,43,12,44,12,44,14,46,14,46,15,47,16,48,17,49,18,49,20,49,21,50,22,50,23,50,24,50,26,50,27,50,28,50,30,50,31,50,32,49,33,49,34,47,36,47,37,46,37,45,39,44,39,43,40,41,40,40,41,38,41,37) )
 
 
 '''
@@ -195,15 +195,14 @@ class CNC:
         
         # Servo pulse widths to move continuous-rotation servos
         self.CENTRE = 1500  # off
-        self.INWARD = 2000  # clockwise, draw the carriage closer
+        self.INWARD = 1900  # clockwise, draw the carriage closer
         self.OUTWARD = 1000 # anticlockwise, push the carriage away
-        
-        
-    # Move servos one step by turning them on and checking for a pulse
-    # on the rotation switch.
+    
 
     def makeStepX(self,direction):
-
+        # Move servos one step by turning them on and checking for a pulse
+        # on the rotation switch.
+        
         # Power up the servo without moving it
         self.pi.set_servo_pulsewidth(self.SERVO_X, self.CENTRE)
 
@@ -310,7 +309,6 @@ class CNC:
 
 
     def initX(self):
-
         # Move X servo to home position by driving clockwise until the
         # limit switch is actuated.
         
@@ -330,7 +328,6 @@ class CNC:
 
             
     def initY(self):
-
         # Move Y servo to home position by driving clockwise until the
         # limit switch is actuated.
         self.pi.set_servo_pulsewidth(self.SERVO_Y, self.INWARD)
@@ -413,7 +410,7 @@ class CNC:
             makeStepX(directionX)
 
         while(self.Y != newY):
-            makeStepY(directionY);
+            makeStepY(directionY)
 
 
     def plotCoordinates(self,coordinates):
@@ -652,11 +649,11 @@ def setup(myCNC):
 #  digitalWrite(MENU_MINUS, HIGH);
 
     print("Initializing Z")
-    #myCNC.initZ()
+    myCNC.initZ()
 #  lcd.setCursor(0, 1);
 #  lcd.print("Initializing   Y");
     print("Initializing Y")
-    #myCNC.initY()
+    myCNC.initY()
 #  lcd.setCursor(0, 1);
 #  lcd.print("Initializing   X");
     print("Initializing X")
@@ -676,12 +673,14 @@ def setup(myCNC):
 def loop(myCNC):
     time.sleep(3)
     for i in range(10):
-        myCNC.makeStepX(0)
+        myCNC.makeStepX(True)
     time.sleep(3)
     for i in range(5):
-        myCNC.makeStepX(1)
+        myCNC.makeStepX(False)
     time.sleep(3)
-    pass
+    
+    myCNC.plot("A")
+
 '''
   if(menueSubLevel == 0){
     lcd.setCursor(0, 0);
@@ -862,6 +861,11 @@ if __name__ == "__main__":
         print("Could not connect to PiGPIO.  Is pigpiod running?  Try 'sudo pigpiod'.")
         exit()
     
-    myCNC = CNC(pi,24,25,23,17,27,22,5,6,13)
+    # Set up an instance of the CNC
+    # X sensor, switch, servo
+    # Y sensor, switch, servo
+    # Z sensor, switch, servo
+    myCNC = CNC(pi, 24,25,23, 17,27,22, 5,6,13)
+    
     setup(myCNC)
     loop(myCNC)
