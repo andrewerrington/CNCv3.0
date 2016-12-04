@@ -9,6 +9,9 @@
 import pigpio
 import time
 
+import hershey # Get Hershey font data
+
+# Original font data from Arduino version
 font = {}
 
 font["A"]=( (0,56,21,1,29,1,51,56,43,56,37,40,14,40,8,56,0,56),
@@ -106,10 +109,11 @@ class CNC:
                  SENSOR_Y, SWITCH_Y, SERVO_Y,
                  SENSOR_Z, SWITCH_Z, SERVO_Z):
 
-        # Link to the PiGPIO daemon
+        # Link to the pigpio daemon
         self.pi = pi
                         
         # GPIO pins for rotation sensor, limit switch and servo PWM
+        # pigpio uses Broadcom numbering 
         self.SENSOR_X = SENSOR_X
         self.SWITCH_X = SWITCH_X
         self.SERVO_X = SERVO_X
@@ -145,7 +149,7 @@ class CNC:
         self.Y = 0
         self.isPenUp = True
         
-        # Number of steps to move the pen up or down.
+        # Number of steps to move the pen down to draw
         self.PEN_HUB = 10
         
         # Servo pulse widths to move continuous-rotation servos
@@ -326,8 +330,8 @@ class CNC:
 
 
     def penDown(self):
-
         if self.isPenUp:
+            print("Moving pen down.")
             for i in range(self.PEN_HUB):
                 self.makeStepZ(True)
     
@@ -335,6 +339,7 @@ class CNC:
 
             
     def penUp(self):
+        print("Lifting pen up.")
         self.initZ()
 
 
@@ -412,7 +417,6 @@ class CNC:
             self.plotCoordinates(font[character])
 
             print("Returning to start position.")
-            self.penUp()
             # goto coordinates 0, 0
             self.initX()
             self.initY()
@@ -442,10 +446,22 @@ def setup(myCNC):
 def loop(myCNC):
     
     while True:
-        character = input("What character to print? ")
+        print("Enter a character (A-Z or 0-9)")
+        print("Or r then a number for a Roman Hershey character")
+        print("Or j then a number for a Japanese Hershey character")
+        character = input("What character to plot? ")
         
         if character:
-            myCNC.plot(character)
+            if len(character) == 1:
+                myCNC.plot(character)
+            else:
+                hershey_number = int(character[1:])
+                if character[0]=='r':
+                    print("Plotting Roman %s"%hershey_number)
+                    myCNC.plotCoordinates(hershey.roman_chars[hershey_number].vectors)
+                elif character[0]=='j':
+                    print("Plotting Japanese %s"%hershey_number)
+                    myCNC.plotCoordinates(hershey.japanese_chars[hershey_number].vectors)
         else:
             break
 
